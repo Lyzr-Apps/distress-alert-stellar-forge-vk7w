@@ -4,6 +4,17 @@ import parseLLMJson from '@/lib/jsonParser'
 const LYZR_TASK_URL = 'https://agent-prod.studio.lyzr.ai/v3/inference/chat/task'
 const LYZR_API_KEY = process.env.LYZR_API_KEY || ''
 
+/**
+ * GET /api/agent — health check
+ */
+export async function GET() {
+  return NextResponse.json({
+    status: 'ok',
+    configured: !!LYZR_API_KEY,
+    timestamp: new Date().toISOString(),
+  })
+}
+
 // Types
 interface ArtifactFile {
   file_url: string
@@ -132,7 +143,7 @@ export async function POST(request: NextRequest) {
           response: { status: 'error', result: {}, message: 'LYZR_API_KEY not configured' },
           error: 'LYZR_API_KEY not configured on server',
         },
-        { status: 500 }
+        { status: 200 }
       )
     }
 
@@ -151,7 +162,7 @@ export async function POST(request: NextRequest) {
         response: { status: 'error', result: {}, message: errorMsg },
         error: errorMsg,
       },
-      { status: 500 }
+      { status: 200 }
     )
   }
 }
@@ -169,7 +180,7 @@ async function submitTask(body: any) {
         response: { status: 'error', result: {}, message: 'message and agent_id are required' },
         error: 'message and agent_id are required',
       },
-      { status: 400 }
+      { status: 200 }
     )
   }
 
@@ -215,7 +226,7 @@ async function submitTask(body: any) {
         error: errorMsg,
         raw_response: submitText,
       },
-      { status: submitRes.status }
+      { status: 200 }
     )
   }
 
@@ -249,10 +260,11 @@ async function pollTask(task_id: string) {
       {
         success: false,
         status: 'failed',
+        response: { status: 'error', result: {}, message: msg },
         error: msg,
         raw_response: pollText,
       },
-      { status: pollRes.status }
+      { status: 200 }
     )
   }
 
@@ -271,8 +283,9 @@ async function pollTask(task_id: string) {
         status: 'failed',
         response: { status: 'error', result: {}, message: task.error || 'Agent task failed' },
         error: task.error || 'Agent task failed',
+        timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 200 }
     )
   }
 

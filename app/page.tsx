@@ -579,6 +579,15 @@ export default function Page() {
         slack_channel: eventForm.slack_channel,
       })
       const result = await callAIAgent(message, CLASSIFICATION_AGENT_ID)
+      if (!result) {
+        setAnalyzeError('No response received from agent. Please try again.')
+        return
+      }
+      if (!result.success) {
+        const errMsg = result.error || result.response?.message || 'Agent returned an error.'
+        setAnalyzeError(errMsg)
+        return
+      }
       const parsed = parseClassificationResponse(result)
       if (parsed) {
         const validSeverities = ['Critical', 'High', 'Medium', 'Low'] as const
@@ -587,9 +596,9 @@ export default function Page() {
           id: `alert-${Date.now()}`,
           distress_type: parsed.distress_type,
           severity: sev,
-          zone: parsed.zone,
-          timestamp: parsed.timestamp,
-          confidence_score: parsed.confidence_score,
+          zone: parsed.zone || eventForm.zone,
+          timestamp: parsed.timestamp || new Date().toISOString(),
+          confidence_score: typeof parsed.confidence_score === 'number' ? parsed.confidence_score : eventForm.confidence_score,
           recommended_action: parsed.recommended_action,
           alert_message: parsed.alert_message,
           slack_status: parsed.slack_status,
@@ -636,16 +645,27 @@ export default function Page() {
           confidence_score: a.confidence_score,
           status: a.status,
           response_time: a.response_time,
+          responder: a.responder || '',
+          resolution_notes: a.resolution_notes || '',
         })),
         dateRange: 'Last 7 days',
         totalAlerts: filteredHistory.length,
       })
       const result = await callAIAgent(message, SUMMARY_AGENT_ID)
+      if (!result) {
+        setReportError('No response received from agent. Please try again.')
+        return
+      }
+      if (!result.success) {
+        const errMsg = result.error || result.response?.message || 'Agent returned an error.'
+        setReportError(errMsg)
+        return
+      }
       const parsed = parseSummaryResponse(result)
-      if (parsed) {
+      if (parsed && parsed.summary) {
         setReportData(parsed)
       } else {
-        setReportError('Failed to generate report. Please try again.')
+        setReportError('Failed to generate report. The agent returned an incomplete response.')
       }
     } catch (err: any) {
       setReportError(err?.message || 'An error occurred generating the report.')
