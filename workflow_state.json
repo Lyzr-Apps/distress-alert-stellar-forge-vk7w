@@ -1,0 +1,16 @@
+{
+  "agents": {
+    "alert_classification_agent": {
+      "agent_id": "699eb9968ea4061304f00c4e",
+      "name": "Alert Classification Agent",
+      "has_tools": true,
+      "tools": ["SLACK_CHAT_POST_MESSAGE"]
+    },
+    "alert_summary_agent": {
+      "agent_id": "699eb982fb412608ab72348a",
+      "name": "Alert Summary Agent",
+      "has_tools": false,
+      "tools": []
+    }
+  }
+}

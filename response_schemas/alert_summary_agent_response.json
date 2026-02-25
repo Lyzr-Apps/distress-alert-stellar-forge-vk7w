@@ -1,0 +1,30 @@
+{
+  "agent_name": "Alert Summary Agent",
+  "agent_id": "699eb982fb412608ab72348a",
+  "description": "Analyzes historical alert log data provided via the UI, identifies trends in distress event types and frequency, calculates average response times, and generates actionable safety improvement recommendations",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "summary": "string",
+    "total_events_analyzed": "number",
+    "date_range": "string",
+    "type_distribution": "string",
+    "severity_distribution": "string",
+    "zone_analysis": "string",
+    "avg_response_time": "string",
+    "trends": "string",
+    "recommendations": "string"
+  },
+  "example_response": {
+    "summary": "Executive summary of the alert analysis",
+    "total_events_analyzed": 0,
+    "date_range": "Date range of the analyzed data",
+    "type_distribution": "Breakdown of events by distress type with counts and percentages",
+    "severity_distribution": "Breakdown of events by severity level with counts and percentages",
+    "zone_analysis": "Analysis of events by zone including hotspots",
+    "avg_response_time": "Average response times broken down by severity and zone",
+    "trends": "Identified trends and patterns in the data",
+    "recommendations": "Prioritized actionable recommendations for safety improvements"
+  }
+}

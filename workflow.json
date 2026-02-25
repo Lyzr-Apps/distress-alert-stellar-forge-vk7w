@@ -1,0 +1,72 @@
+{
+  "workflow": {
+    "nodes": [
+      {
+        "id": "input_node",
+        "type": "Input",
+        "label": "Audio Event Input",
+        "nodeCategory": "input"
+      },
+      {
+        "id": "classification_agent",
+        "type": "Agent",
+        "label": "Alert Classification Agent",
+        "nodeCategory": "agent",
+        "agent_id": "699eb9968ea4061304f00c4e",
+        "config": {
+          "name": "Alert Classification Agent",
+          "description": "Receives raw audio event data (sound type, confidence, zone, timestamp), classifies the distress category (scream, glass break, aggression, medical distress), assigns severity level (Critical/High/Medium/Low), composes a structured alert message, and sends it to the appropriate Slack channel",
+          "provider": "openai",
+          "model": "gpt-4.1",
+          "temperature": 0.2,
+          "top_p": 1,
+          "has_tools": true,
+          "tools": ["SLACK_CHAT_POST_MESSAGE"],
+          "image_output_config": null,
+          "voice_config": null,
+          "file_output": false
+        }
+      },
+      {
+        "id": "summary_agent",
+        "type": "Agent",
+        "label": "Alert Summary Agent",
+        "nodeCategory": "agent",
+        "agent_id": "699eb982fb412608ab72348a",
+        "config": {
+          "name": "Alert Summary Agent",
+          "description": "Analyzes historical alert log data provided via the UI, identifies trends in distress event types and frequency, calculates average response times, and generates actionable safety improvement recommendations",
+          "provider": "openai",
+          "model": "gpt-4.1",
+          "temperature": 0.3,
+          "top_p": 1,
+          "has_tools": false,
+          "tools": [],
+          "image_output_config": null,
+          "voice_config": null,
+          "file_output": false
+        }
+      },
+      {
+        "id": "output_node",
+        "type": "Output",
+        "label": "Alert Output",
+        "nodeCategory": "end"
+      }
+    ],
+    "edges": [
+      {
+        "source": "input_node",
+        "target": "classification_agent"
+      },
+      {
+        "source": "classification_agent",
+        "target": "summary_agent"
+      },
+      {
+        "source": "summary_agent",
+        "target": "output_node"
+      }
+    ]
+  }
+}

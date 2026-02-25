@@ -1,0 +1,28 @@
+{
+  "agent_name": "Alert Classification Agent",
+  "agent_id": "699eb9968ea4061304f00c4e",
+  "description": "Receives raw audio event data (sound type, confidence, zone, timestamp), classifies the distress category (scream, glass break, aggression, medical distress), assigns severity level (Critical/High/Medium/Low), composes a structured alert message, and sends it to the appropriate Slack channel",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "distress_type": "string",
+    "severity": "string",
+    "zone": "string",
+    "timestamp": "string",
+    "confidence_score": "number",
+    "recommended_action": "string",
+    "alert_message": "string",
+    "slack_status": "string"
+  },
+  "example_response": {
+    "distress_type": "Classified distress category: Scream, Glass Break, Aggression, or Medical Distress",
+    "severity": "Severity level: Critical, High, Medium, or Low",
+    "zone": "Location/zone where the event was detected",
+    "timestamp": "ISO timestamp of the event",
+    "confidence_score": 0,
+    "recommended_action": "Recommended immediate action for staff",
+    "alert_message": "Formatted alert message that was sent to Slack",
+    "slack_status": "Status of Slack notification: sent, failed, or pending"
+  }
+}
